@@ -74,4 +74,5 @@ const Checklist: React.FC<ICheckListProps> = ({ items, mode }) => {
   );
 };
 
+export type { IItem };
 export { Checklist, EChecklistMode };
