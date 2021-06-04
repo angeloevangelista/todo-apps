@@ -23,6 +23,10 @@ const globalStyles = createGlobalStyle`
     font-family: 'Montserrat', sans-serif;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   @media (max-width: 700px) {
     :root {
       font-size: 65%;

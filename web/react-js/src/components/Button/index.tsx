@@ -7,12 +7,14 @@ interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: IconType;
   iconAlign?: 'left' | 'right';
   backgroundColor?: string;
+  iconSize?: number;
 }
 
 const Button: React.FC<IButtonProps> = ({
   children,
   icon: Icon,
   iconAlign,
+  iconSize,
   backgroundColor,
   ...rest
 }) => (
@@ -22,7 +24,7 @@ const Button: React.FC<IButtonProps> = ({
     backgroundColor={backgroundColor}
   >
     {children}
-    {Icon && <Icon size={20} />}
+    {Icon && <Icon size={iconSize ?? 20} />}
   </Container>
 );
 

@@ -11,14 +11,14 @@ const items = [
   { completed: true, title: 'Completed task', id: uuidv4() },
 ];
 
-const AllTodos: React.FC = () => {
+const CompletedTodos: React.FC = () => {
   return (
     <SC.Container>
       <TodoForm placeholder="add details" />
 
-      <Checklist mode={EChecklistMode.all} items={items} />
+      <Checklist mode={EChecklistMode.completed} items={items} />
     </SC.Container>
   );
 };
 
-export { AllTodos };
+export { CompletedTodos };
