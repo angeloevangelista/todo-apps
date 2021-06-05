@@ -10,8 +10,11 @@ export const Container = styled.div`
 
 export const Checklist = styled.ul`
   width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
 
   margin: 2rem 0;
+  padding: 0 0.4rem;
   list-style: none;
 
   > li {

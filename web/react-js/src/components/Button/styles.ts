@@ -33,6 +33,16 @@ export const Container = styled.button<IContainerProps>`
         : darken(0.1, '#2F80ED')};
   }
 
+  &[disabled] {
+    opacity: 0.7;
+    cursor: not-allowed;
+
+    &:hover {
+      background: ${(props) =>
+        props.backgroundColor ? props.backgroundColor : '#2F80ED'};
+    }
+  }
+
   svg {
     margin: 0 0.4rem;
   }

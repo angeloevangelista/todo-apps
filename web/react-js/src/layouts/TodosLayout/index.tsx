@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+
 import { DefaultLayout } from '../DefaultLayout';
+import { TodoContextProvider } from '../../hooks/TodoContext';
 
 import * as SC from './styles';
 
@@ -20,33 +22,38 @@ const TodosLayout: React.FC<ITodosLayoutProps> = ({
   selectedMenuItem,
 }) => {
   return (
-    <DefaultLayout>
-      <SC.Container>
-        <header>
-          <h1>#todo</h1>
-        </header>
+    <TodoContextProvider>
+      <DefaultLayout>
+        <SC.Container>
+          <header>
+            <h1>#todo</h1>
+          </header>
 
-        <SC.Navbar>
-          <Link data-selected={selectedMenuItem === EMenuItems.All} to="/todos">
-            All
-          </Link>
-          <Link
-            data-selected={selectedMenuItem === EMenuItems.Active}
-            to="/todos/active"
-          >
-            Active
-          </Link>
-          <Link
-            data-selected={selectedMenuItem === EMenuItems.Completed}
-            to="/todos/completed"
-          >
-            Completed
-          </Link>
-        </SC.Navbar>
+          <SC.Navbar>
+            <Link
+              data-selected={selectedMenuItem === EMenuItems.All}
+              to="/todos"
+            >
+              All
+            </Link>
+            <Link
+              data-selected={selectedMenuItem === EMenuItems.Active}
+              to="/todos/active"
+            >
+              Active
+            </Link>
+            <Link
+              data-selected={selectedMenuItem === EMenuItems.Completed}
+              to="/todos/completed"
+            >
+              Completed
+            </Link>
+          </SC.Navbar>
 
-        {children}
-      </SC.Container>
-    </DefaultLayout>
+          {children}
+        </SC.Container>
+      </DefaultLayout>
+    </TodoContextProvider>
   );
 };
 
