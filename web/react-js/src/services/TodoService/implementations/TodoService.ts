@@ -4,6 +4,7 @@ import { ITodoService } from '../ITodoService';
 import { ITodoItem } from '../../../shared/models/ITodoItem';
 
 class TodoServiceLocalStorage implements ITodoService {
+  private readonly FAKE_TIMEOUT = 500;
   private readonly LOCAL_STORAGE_KEY = 'TODO_APP_REACT';
 
   private _todos: ITodoItem[];
@@ -36,7 +37,9 @@ class TodoServiceLocalStorage implements ITodoService {
   }
 
   listTodos(): Promise<ITodoItem[]> {
-    return new Promise((resolve) => resolve(this._todos));
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(this._todos), this.FAKE_TIMEOUT);
+    });
   }
 
   createTodo(partialTodoItem: Partial<ITodoItem>): Promise<ITodoItem> {
@@ -52,7 +55,8 @@ class TodoServiceLocalStorage implements ITodoService {
       this._todos.push(createdTodo);
 
       this.persistTodos();
-      resolve(createdTodo);
+
+      setTimeout(() => resolve(createdTodo), this.FAKE_TIMEOUT);
     });
   }
 
@@ -69,7 +73,8 @@ class TodoServiceLocalStorage implements ITodoService {
       this._todos = this._todos.filter((p) => !todoIds.includes(p.id));
 
       this.persistTodos();
-      resolve();
+
+      setTimeout(() => resolve(), this.FAKE_TIMEOUT);
     });
   }
 
@@ -91,7 +96,7 @@ class TodoServiceLocalStorage implements ITodoService {
 
       this.persistTodos();
 
-      resolve(updatedTodo);
+      setTimeout(() => resolve(updatedTodo), this.FAKE_TIMEOUT);
     });
   }
 }

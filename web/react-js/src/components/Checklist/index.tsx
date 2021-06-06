@@ -1,11 +1,15 @@
 import React, { useCallback, useMemo } from 'react';
 import { FiTrash } from 'react-icons/fi';
 
+import { useTodo } from '../../hooks/TodoContext';
+
 import { Button } from '../Button';
 import { ITodoItem } from '../../shared/models/ITodoItem';
+import { ITodoService } from '../../services/TodoService/ITodoService';
+import { TodoServiceLocalStorage } from '../../services/TodoService/implementations/TodoService';
 
 import * as SC from './styles';
-import { useTodo } from '../../hooks/TodoContext';
+import { useLoader } from '../../hooks/LoaderContext';
 
 enum EChecklistMode {
   all = 'all',
@@ -20,6 +24,11 @@ interface ICheckListProps {
 
 const Checklist: React.FC<ICheckListProps> = ({ items, mode }) => {
   const { completeTodo, reActivateTodo, removeTodos } = useTodo();
+  const { startLoader, stopLoader } = useLoader();
+
+  const todoService = useMemo<ITodoService>(() => {
+    return TodoServiceLocalStorage.getInstance();
+  }, []);
 
   const filteredItems = useMemo<ITodoItem[]>(() => {
     let treatedItems = [];
@@ -44,28 +53,64 @@ const Checklist: React.FC<ICheckListProps> = ({ items, mode }) => {
   }, [items, mode]);
 
   const handleDeleteAllItems = useCallback(async () => {
-    await removeTodos(filteredItems.map((p) => p.id));
-  }, [filteredItems, removeTodos]);
+    try {
+      startLoader('Deleting todos');
+
+      const itemIds = filteredItems.map((p) => p.id);
+
+      await todoService.deleteTodos(itemIds);
+
+      removeTodos(itemIds);
+    } catch (error) {
+      alert('Deu ruim, amigão 🔥🔥🔥');
+      console.log(error);
+    } finally {
+      stopLoader();
+    }
+  }, [filteredItems, removeTodos, startLoader, stopLoader, todoService]);
 
   const handleDeleteItem = useCallback(
     async (itemId: string) => {
-      await removeTodos([itemId]);
+      try {
+        startLoader('Deleting todo');
+
+        await todoService.deleteTodos([itemId]);
+
+        removeTodos([itemId]);
+      } catch (error) {
+        alert('Deu ruim, amigão 🔥🔥🔥');
+        console.log(error);
+      } finally {
+        stopLoader();
+      }
     },
-    [removeTodos],
+    [removeTodos, startLoader, stopLoader, todoService],
   );
 
   const handleChangeItemState = useCallback(
     async (itemId: string) => {
-      const item = items.find((p) => p.id === itemId);
+      try {
+        startLoader('Updating todo');
 
-      if (!item) throw new Error('Item not found.');
+        const item = items.find((p) => p.id === itemId);
 
-      item.completed = !item.completed;
+        if (!item) throw new Error('Item not found.');
 
-      if (item.completed) await completeTodo(item);
-      else await reActivateTodo(item);
+        const updatedTodo = await todoService.updateTodo({
+          ...item,
+          completed: !item.completed,
+        });
+
+        if (updatedTodo.completed) completeTodo(updatedTodo);
+        else reActivateTodo(updatedTodo);
+      } catch (error) {
+        alert('Deu ruim, amigão 🔥🔥🔥');
+        console.log(error);
+      } finally {
+        stopLoader();
+      }
     },
-    [items, completeTodo, reActivateTodo],
+    [startLoader, completeTodo, reActivateTodo, stopLoader, items, todoService],
   );
 
   return (

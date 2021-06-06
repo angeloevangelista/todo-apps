@@ -1,6 +1,8 @@
 import React from 'react';
 
 import { Footer } from '../../components/Footer';
+import { LoaderContextProvider } from '../../hooks/LoaderContext';
+import { TodoContextProvider } from '../../hooks/TodoContext';
 
 import * as SC from './styles';
 
@@ -10,11 +12,15 @@ interface IDefaultLayoutProps {
 
 const DefaultLayout: React.FC<IDefaultLayoutProps> = ({ children }) => {
   return (
-    <SC.WrapperContainer>
-      <SC.PageContainer>{children}</SC.PageContainer>
+    <LoaderContextProvider>
+      <TodoContextProvider>
+        <SC.WrapperContainer>
+          <SC.PageContainer>{children}</SC.PageContainer>
 
-      <Footer username="angeloevangelista" />
-    </SC.WrapperContainer>
+          <Footer username="angeloevangelista" />
+        </SC.WrapperContainer>
+      </TodoContextProvider>
+    </LoaderContextProvider>
   );
 };
 
